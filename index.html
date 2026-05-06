@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>India Ehrhardt — Business Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f1f35;
+    --navy-mid: #1b3a5c;
+    --blue: #2e6da4;
+    --blue-light: #4a8bbf;
+    --cream: #f8f4ee;
+    --cream-dark: #ede8e0;
+    --text: #1a1a2e;
+    --text-light: #5a6a7a;
+    --accent: #c9a84c;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.4rem 3rem;
+    background: rgba(248, 244, 238, 0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(46, 109, 164, 0.12);
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--navy);
+    letter-spacing: 0.02em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--blue); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    background: var(--navy);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 4rem 6rem 5rem;
+    position: relative;
+  }
+
+  .hero-left::after {
+    content: '';
+    position: absolute;
+    right: -1px; top: 0; bottom: 0;
+    width: 60px;
+    background: var(--cream);
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  }
+
+  .hero-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 6vw, 5.5rem);
+    font-weight: 300;
+    line-height: 1.0;
+    color: var(--white);
+    margin-bottom: 0.3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.35s forwards;
+  }
+
+  .hero-name em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 2vw, 1.4rem);
+    font-weight: 300;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.06em;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.5s forwards;
+  }
+
+  .hero-desc {
+    font-size: 0.92rem;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.65);
+    max-width: 380px;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.65s forwards;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--navy);
+    padding: 0.85rem 2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .btn-primary:hover {
+    background: #e0bc6a;
+    transform: translateY(-2px);
+  }
+
+  .btn-outline {
+    border: 1px solid rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.8);
+    padding: 0.85rem 2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .btn-outline:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .hero-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 5rem 6rem 6rem;
+    position: relative;
+  }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.9s forwards;
+  }
+
+  .stat-item {
+    padding: 1.8rem;
+    background: var(--white);
+    border: 1px solid var(--cream-dark);
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .stat-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(15,31,53,0.1);
+  }
+
+  .stat-item::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--accent);
+  }
+
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem;
+    font-weight: 600;
+    color: var(--navy);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-light);
+  }
+
+  .hero-contact {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 1.0s forwards;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--text-light);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .contact-item:hover { color: var(--blue); }
+
+  .contact-dot {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 6rem 5rem;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.8rem;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    font-weight: 300;
+    color: var(--navy);
+    line-height: 1.15;
+    margin-bottom: 3rem;
+  }
+
+  /* ── ABOUT ── */
+  #about {
+    background: var(--white);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: start;
+  }
+
+  .about-text p {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--text-light);
+    margin-bottom: 1.2rem;
+  }
+
+  .about-text p strong { color: var(--navy); font-weight: 500; }
+
+  .education-card {
+    background: var(--cream);
+    padding: 2.5rem;
+    border-left: 4px solid var(--blue);
+    margin-bottom: 1.5rem;
+  }
+
+  .edu-school {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 0.3rem;
+  }
+
+  .edu-degree {
+    font-size: 0.95rem;
+    color: var(--blue);
+    margin-bottom: 0.5rem;
+  }
+
+  .edu-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-light);
+    letter-spacing: 0.05em;
+  }
+
+  .cert-list {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .cert-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.9rem 1.2rem;
+    background: var(--white);
+    border: 1px solid var(--cream-dark);
+  }
+
+  .cert-icon {
+    font-size: 1.1rem;
+  }
+
+  .cert-name {
+    font-size: 0.88rem;
+    color: var(--navy);
+    font-weight: 500;
+  }
+
+  .cert-org {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--text-light);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── PROJECTS ── */
+  #projects {
+    background: var(--cream);
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    background: var(--white);
+    border: 1px solid var(--cream-dark);
+    padding: 2.2rem;
+    position: relative;
+    transition: transform 0.25s, box-shadow 0.25s;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--navy), var(--blue));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+
+  .project-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 48px rgba(15,31,53,0.12);
+  }
+
+  .project-card:hover::before { transform: scaleX(1); }
+
+  .project-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    font-weight: 300;
+    color: var(--cream-dark);
+    line-height: 1;
+    margin-bottom: 1rem;
+    transition: color 0.3s;
+  }
+
+  .project-card:hover .project-num { color: rgba(46, 109, 164, 0.15); }
+
+  .project-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 0.6rem;
+    line-height: 1.2;
+  }
+
+  .project-desc {
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: var(--text-light);
+    margin-bottom: 1.4rem;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 0.7rem;
+    background: var(--cream);
+    color: var(--blue);
+    border: 1px solid rgba(46, 109, 164, 0.2);
+  }
+
+  .project-link {
+    position: absolute;
+    bottom: 2.2rem; right: 2.2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--blue);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .project-card:hover .project-link { opacity: 1; }
+
+  /* ── SKILLS ── */
+  #skills {
+    background: var(--navy);
+    color: var(--white);
+  }
+
+  #skills .section-title { color: var(--white); }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .skill-group {
+    padding: 2rem;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .skill-group:hover {
+    border-color: var(--accent);
+    background: rgba(255,255,255,0.03);
+  }
+
+  .skill-group-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.2rem;
+  }
+
+  .skill-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .skill-pill {
+    font-size: 0.83rem;
+    padding: 0.4rem 0.9rem;
+    background: rgba(255,255,255,0.07);
+    color: rgba(255,255,255,0.8);
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.2s;
+  }
+
+  .skill-pill:hover {
+    background: rgba(201, 168, 76, 0.15);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* ── EXPERIENCE ── */
+  #experience {
+    background: var(--white);
+  }
+
+  .timeline {
+    position: relative;
+    padding-left: 2.5rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0.5rem; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--blue), transparent);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--cream-dark);
+  }
+
+  .timeline-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: -2.85rem;
+    top: 0.35rem;
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--white);
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+
+  .timeline-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+  }
+
+  .timeline-role {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 0.2rem;
+  }
+
+  .timeline-company {
+    font-size: 0.9rem;
+    color: var(--blue);
+    margin-bottom: 1rem;
+  }
+
+  .timeline-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .timeline-bullets li {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--text-light);
+    padding-left: 1.2rem;
+    position: relative;
+  }
+
+  .timeline-bullets li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-size: 0.8rem;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--navy);
+    padding: 4rem 5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+
+  .footer-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 300;
+    color: var(--white);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-link {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-link:hover { color: var(--accent); }
+
+  .footer-copy {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.05em;
+    width: 100%;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s, transform 0.7s;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-left::after { display: none; }
+    .hero-left { padding: 7rem 2rem 3rem; }
+    .hero-right { padding: 3rem 2rem 4rem; }
+    #about { grid-template-columns: 1fr; gap: 3rem; padding: 4rem 2rem; }
+    section { padding: 4rem 2rem; }
+    nav { padding: 1.2rem 2rem; }
+    .nav-links { gap: 1.5rem; }
+    footer { padding: 3rem 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">India Ehrhardt</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="mailto:indiaehrhardt0@gmail.com">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-left">
+    <p class="hero-tag">Business Intelligence &amp; Data Analytics</p>
+    <h1 class="hero-name">India<br><em>Ehrhardt</em></h1>
+    <p class="hero-title">MSU Denver · B.S. Business Intelligence</p>
+    <p class="hero-desc">I bridge the gap between raw data and real business decisions — building models, uncovering patterns, and translating analytical findings into clear, actionable outcomes.</p>
+    <div class="hero-ctas">
+      <a href="#projects" class="btn-primary">View Projects</a>
+      <a href="https://www.linkedin.com/in/india-ehrhardt-b7545a290" target="_blank" class="btn-outline">LinkedIn</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">3.29</div>
+        <div class="stat-label">GPA</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">5+</div>
+        <div class="stat-label">Projects</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">RF Accuracy</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">60%</div>
+        <div class="stat-label">Revenue Growth</div>
+      </div>
+    </div>
+    <div class="hero-contact">
+      <a href="mailto:indiaehrhardt0@gmail.com" class="contact-item">
+        <span class="contact-dot"></span>indiaehrhardt0@gmail.com
+      </a>
+      <a href="tel:7204028545" class="contact-item">
+        <span class="contact-dot"></span>720-402-8545
+      </a>
+      <a href="https://github.com/india-ehrhardt" target="_blank" class="contact-item">
+        <span class="contact-dot"></span>github.com/india-ehrhardt
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-text reveal">
+    <p class="section-label">About Me</p>
+    <h2 class="section-title">Data-driven thinking with real-world roots</h2>
+    <p>I'm a Business Intelligence student at Metropolitan State University of Denver, graduating December 2026. My degree sits at the intersection of data analytics, database systems, and business strategy — a combination I think is genuinely practical for the real world.</p>
+    <p>Before returning to school, I spent years managing sales operations, building CRM pipelines, and running data-driven marketing campaigns. Those experiences gave me a strong sense of <strong>how data connects to real business outcomes</strong> — which is what drew me to BI as a field.</p>
+    <p>I'm drawn to work where analysis doesn't just stay in a spreadsheet — where it drives decisions, shapes strategy, and creates measurable impact.</p>
+  </div>
+
+  <div class="about-right reveal">
+    <div class="education-card">
+      <div class="edu-school">Metropolitan State University of Denver</div>
+      <div class="edu-degree">B.S. in Business Intelligence</div>
+      <div class="edu-meta">GPA 3.29 &nbsp;·&nbsp; Expected December 2026</div>
+      <div class="edu-meta" style="margin-top:0.5rem;">Database Management · Data Analytics · Data Mining · Python · Business Intelligence</div>
+    </div>
+
+    <div class="cert-list">
+      <div class="cert-item">
+        <span class="cert-icon">📜</span>
+        <div>
+          <div class="cert-name">Introduction to Python</div>
+          <div class="cert-org">DataCamp · 2024</div>
+        </div>
+      </div>
+      <div class="cert-item">
+        <span class="cert-icon">📜</span>
+        <div>
+          <div class="cert-name">Introduction to Data Visualization with Seaborn</div>
+          <div class="cert-org">DataCamp · 2024</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <p class="section-label reveal">Work</p>
+  <h2 class="section-title reveal">Academic Projects</h2>
+  <div class="projects-grid">
+
+    <a class="project-card reveal" href="https://github.com/india-ehrhardt/mushroom-classification" target="_blank">
+      <div class="project-num">01</div>
+      <div class="project-title">Mushroom Edibility Classification</div>
+      <div class="project-desc">Built and compared Decision Tree and Random Forest classifiers on 60,000+ mushroom samples. Random Forest achieved 100% accuracy with zero false negatives — critical for consumer safety. Findings delivered in a formal business report.</div>
+      <div class="project-tags">
+        <span class="tag">Python</span>
+        <span class="tag">scikit-learn</span>
+        <span class="tag">Random Forest</span>
+        <span class="tag">pandas</span>
+        <span class="tag">matplotlib</span>
+      </div>
+      <span class="project-link">View on GitHub →</span>
+    </a>
+
+    <a class="project-card reveal" href="https://github.com/india-ehrhardt/real-estate-regression" target="_blank">
+      <div class="project-num">02</div>
+      <div class="project-title">Real Estate Pricing & Regression Analysis</div>
+      <div class="project-desc">Built multiple linear regression models in Excel to predict home sale prices. Interpreted R² and p-values to develop a tiered pricing strategy — suggested, maximum, and expected return — benchmarked against Denver/Arvada market data.</div>
+      <div class="project-tags">
+        <span class="tag">Excel</span>
+        <span class="tag">Regression Modeling</span>
+        <span class="tag">Statistical Analysis</span>
+        <span class="tag">Data Analysis ToolPak</span>
+      </div>
+      <span class="project-link">View on GitHub →</span>
+    </a>
+
+    <a class="project-card reveal" href="https://github.com/india-ehrhardt/credit-risk-mining" target="_blank">
+      <div class="project-num">03</div>
+      <div class="project-title">Credit Risk & Association Rule Mining</div>
+      <div class="project-desc">Applied association rule mining in Excel to identify high-risk borrower patterns using support and confidence metrics. Findings translated into a professional business memo for lending decision support.</div>
+      <div class="project-tags">
+        <span class="tag">Excel</span>
+        <span class="tag">Data Mining</span>
+        <span class="tag">Association Rules</span>
+        <span class="tag">Business Reporting</span>
+      </div>
+      <span class="project-link">View on GitHub →</span>
+    </a>
+
+    <a class="project-card reveal" href="https://github.com/india-ehrhardt/oracle-apex-database" target="_blank">
+      <div class="project-num">04</div>
+      <div class="project-title">Relational Database & Oracle APEX Application</div>
+      <div class="project-desc">Designed a normalized relational database with SQL and PL/SQL, then built an interactive Oracle APEX application with reports and master-detail forms for end-user data access.</div>
+      <div class="project-tags">
+        <span class="tag">SQL</span>
+        <span class="tag">PL/SQL</span>
+        <span class="tag">Oracle APEX</span>
+        <span class="tag">Database Design</span>
+      </div>
+      <span class="project-link">View on GitHub →</span>
+    </a>
+
+    <a class="project-card reveal" href="https://github.com/india-ehrhardt/geospatial-market-analysis" target="_blank">
+      <div class="project-num">05</div>
+      <div class="project-title">Geospatial Market Analysis</div>
+      <div class="project-desc">Conducted location-based property analysis using Google Earth and KML overlays to evaluate proximity to schools, amenities, and neighborhood value drivers, integrated into real estate pricing recommendations.</div>
+      <div class="project-tags">
+        <span class="tag">Google Earth</span>
+        <span class="tag">KML</span>
+        <span class="tag">Geospatial Analysis</span>
+        <span class="tag">Market Research</span>
+      </div>
+      <span class="project-link">View on GitHub →</span>
+    </a>
+
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <p class="section-label reveal">Capabilities</p>
+  <h2 class="section-title reveal">Technical Skills</h2>
+  <div class="skills-grid">
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Data & Analytics</div>
+      <div class="skill-pills">
+        <span class="skill-pill">Regression Modeling</span>
+        <span class="skill-pill">Statistical Analysis</span>
+        <span class="skill-pill">Data Mining</span>
+        <span class="skill-pill">Random Forest</span>
+        <span class="skill-pill">Decision Trees</span>
+        <span class="skill-pill">Model Evaluation</span>
+        <span class="skill-pill">Confusion Matrix</span>
+        <span class="skill-pill">R² / p-value</span>
+      </div>
+    </div>
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Languages & Tools</div>
+      <div class="skill-pills">
+        <span class="skill-pill">Python</span>
+        <span class="skill-pill">SQL</span>
+        <span class="skill-pill">PL/SQL</span>
+        <span class="skill-pill">Excel (Advanced)</span>
+        <span class="skill-pill">scikit-learn</span>
+        <span class="skill-pill">pandas</span>
+        <span class="skill-pill">Seaborn</span>
+        <span class="skill-pill">matplotlib</span>
+      </div>
+    </div>
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Platforms</div>
+      <div class="skill-pills">
+        <span class="skill-pill">Oracle APEX</span>
+        <span class="skill-pill">Salesforce CRM</span>
+        <span class="skill-pill">Google Earth / KML</span>
+        <span class="skill-pill">Google Ads</span>
+        <span class="skill-pill">Meta Ads</span>
+        <span class="skill-pill">Shopify</span>
+        <span class="skill-pill">GitHub</span>
+      </div>
+    </div>
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Business</div>
+      <div class="skill-pills">
+        <span class="skill-pill">Data-Driven Decision Making</span>
+        <span class="skill-pill">Business Reporting</span>
+        <span class="skill-pill">CRM Pipeline Management</span>
+        <span class="skill-pill">P&L Management</span>
+        <span class="skill-pill">Client Communication</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <p class="section-label reveal">Background</p>
+  <h2 class="section-title reveal">Work Experience</h2>
+  <div class="timeline">
+
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">Feb 2022 – Jul 2023</div>
+      <div class="timeline-role">SEO & Digital Operations Manager</div>
+      <div class="timeline-company">Shop Madison Riley · Denver, CO</div>
+      <ul class="timeline-bullets">
+        <li>Converted a brick-and-mortar store to a fully operational Shopify e-commerce business, managing all inventory, content, and SEO.</li>
+        <li>Planned, launched, and analyzed Google Ads and Meta campaigns, adjusting strategies based on ROAS metrics to maximize revenue efficiency.</li>
+        <li>Managed all social media channels and improved UX by integrating chatbots and HappyReturns automated processing.</li>
+      </ul>
+    </div>
+
+    <div class="timeline-item reveal">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">Aug 2015 – Mar 2020</div>
+      <div class="timeline-role">National Sales Manager</div>
+      <div class="timeline-company">Premier Event Services · Remote (Nationwide)</div>
+      <ul class="timeline-bullets">
+        <li>Grew annual revenue 60% in the first year by building a Salesforce CRM pipeline that replaced ad-hoc outreach with a data-driven system.</li>
+        <li>Managed the full sales cycle for 100+ annual events — lead qualification through vendor coordination and execution.</li>
+        <li>Oversaw monthly payroll, financial forecasting, and P&L management across a fully remote, nationwide operation.</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-name">India Ehrhardt</div>
+  <div class="footer-links">
+    <a href="mailto:indiaehrhardt0@gmail.com" class="footer-link">Email</a>
+    <a href="https://www.linkedin.com/in/india-ehrhardt-b7545a290" target="_blank" class="footer-link">LinkedIn</a>
+    <a href="https://github.com/india-ehrhardt" target="_blank" class="footer-link">GitHub</a>
+  </div>
+  <p class="footer-copy">© 2026 India Ehrhardt · Denver, CO</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
