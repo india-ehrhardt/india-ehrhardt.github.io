@@ -162,8 +162,8 @@
   .pipeline-card .cap .dot{ width:7px; height:7px; border-radius:50%; background:var(--mint); display:inline-block; margin-right:6px; box-shadow:0 0 8px var(--mint); }
   svg.pipeline{ width:100%; height:auto; display:block; }
   .pline{ fill:none; stroke:var(--line); stroke-width:2; }
-  .pline-glow{ fill:none; stroke:url(#pgrad); stroke-width:2; stroke-dasharray:6 260; stroke-dashoffset:0; animation:flow 3.2s linear infinite; }
-  @keyframes flow{ to{ stroke-dashoffset:-266; } }
+  .pline-glow{ fill:none; stroke:url(#pgrad); stroke-width:2; stroke-dasharray:6 874; stroke-dashoffset:0; animation:flow 3.6s linear infinite; }
+  @keyframes flow{ to{ stroke-dashoffset:-880; } }
   .pnode{ fill:var(--surface-hi); stroke:var(--line); stroke-width:1.5; }
   .pnode.active{ stroke:var(--violet); }
   .pdot{ fill:var(--pink); filter:drop-shadow(0 0 5px var(--pink)); }
@@ -343,33 +343,31 @@
 
       <div class="pipeline-card">
         <div class="cap"><span><span class="dot"></span>live pipeline</span><span>rossmann-sales-forecasting</span></div>
-        <svg class="pipeline" viewBox="0 0 420 220" xmlns="http://www.w3.org/2000/svg">
+        <svg class="pipeline" viewBox="0 0 420 200" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="pgrad" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stop-color="#8b7bff"/>
               <stop offset="100%" stop-color="#ff6fa8"/>
             </linearGradient>
           </defs>
-          <path class="pline" d="M45 60 L375 60"/>
-          <path class="pline" d="M45 60 L45 160 L155 160"/>
-          <path class="pline" d="M155 160 L265 160"/>
-          <path class="pline" d="M265 160 L375 160 L375 60"/>
-          <path class="pline-glow" d="M45 60 L375 60 L375 160 L265 160 L155 160 L45 160 L45 60"/>
+          <path class="pline" d="M35 60 L385 60 L385 150 L35 150 Z"/>
+          <path class="pline-glow" d="M35 60 L385 60 L385 150 L35 150 Z"/>
 
-          <circle class="pnode active" cx="45" cy="60" r="7"/>
-          <text class="plabel" x="45" y="40">raw_data.csv</text>
-          <text class="pval" x="45" y="80">1,115 stores</text>
+          <circle class="pnode active" cx="35" cy="60" r="7"/>
+          <text class="plabel" x="35" y="38" text-anchor="start">raw_data.csv</text>
+          <text class="pval" x="35" y="85" text-anchor="start">1,115 stores</text>
 
-          <circle class="pnode" cx="155" cy="160" r="7"/>
-          <text class="plabel" x="120" y="185">feature_eng</text>
-          <text class="pval" x="120" y="140">promo · holiday · lag</text>
+          <circle class="pnode" cx="385" cy="60" r="7"/>
+          <text class="plabel" x="385" y="38" text-anchor="end">feature_eng</text>
+          <text class="pval" x="385" y="85" text-anchor="end">promo · holiday · lag</text>
 
-          <circle class="pnode" cx="265" cy="160" r="7"/>
-          <text class="plabel" x="245" y="185">LightGBM</text>
+          <circle class="pnode" cx="385" cy="150" r="7"/>
+          <text class="plabel" x="385" y="172" text-anchor="end">LightGBM</text>
+          <text class="pval" x="385" y="133" text-anchor="end">model training</text>
 
-          <circle class="pnode active" cx="375" cy="60" r="7"/>
-          <text class="plabel" x="330" y="40">dashboard</text>
-          <text class="pval" x="330" y="80">streamlit</text>
+          <circle class="pnode active" cx="35" cy="150" r="7"/>
+          <text class="plabel" x="35" y="172" text-anchor="start">dashboard</text>
+          <text class="pval" x="35" y="133" text-anchor="start">streamlit</text>
         </svg>
       </div>
     </div>
